@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gerador de Keys - Tony_Dev Scripts</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+    /* Reset básico */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      font-family: 'Share Tech Mono', monospace;
+      color: #c7d0d8;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    main {
+      background: #1f2a38cc;
+      padding: 2rem 2.5rem 3rem;
+      border-radius: 15px;
+      width: 400px;
+      max-width: 100%;
+      box-shadow: 0 0 15px #0ff7ff88;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      user-select: text;
+    }
+    h1 {
+      text-align: center;
+      color: #0ff7ff;
+      font-weight: 700;
+      font-size: 2.3rem;
+      letter-spacing: 2px;
+      margin-bottom: 0;
+      user-select: text;
+    }
+    p.description {
+      font-size: 0.95rem;
+      color: #66e3ffcc;
+      text-align: center;
+      margin-top: 0.2rem;
+      margin-bottom: 1rem;
+      user-select: text;
+    }
+    label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #66e3ffcc;
+      margin-bottom: 0.25rem;
+      user-select: text;
+    }
+    input[type=text] {
+      width: 100%;
+      padding: 0.5rem 0.9rem;
+      font-size: 1rem;
+      font-family: 'Share Tech Mono', monospace;
+      border-radius: 8px;
+      border: 1.8px solid #0ff7ffaa;
+      background: #0f2736cc;
+      color: #c7d0d8;
+      transition: border-color 0.25s ease;
+      outline: none;
+      user-select: text;
+    }
+    input[type=text]:focus {
+      border-color: #00f3ff;
+      box-shadow: 0 0 8px #00f3ffcc;
+      background: #11333fdd;
+    }
+    button {
+      width: 100%;
+      background: #00f3ff;
+      color: #003340;
+      font-family: 'Share Tech Mono', monospace;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 0.7rem 0;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 0 0 10px #00f3ffbb;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background: #00c6cc;
+      box-shadow: 0 0 20px #00c6cccc;
+    }
+    .result {
+      margin-top: 0.9rem;
+      min-height: 2.4rem;
+      font-weight: 700;
+      font-size: 1rem;
+      border-radius: 10px;
+      padding: 0.5rem 0.7rem;
+      text-align: center;
+      user-select: text;
+      transition: background-color 0.3s, color 0.3s;
+      font-family: 'Share Tech Mono', monospace;
+    }
+    .result.success {
+      background: #004d40cc;
+      color: #a6ffcb;
+      box-shadow: 0 0 8px #00f3ffbb;
+    }
+    .result.error {
+      background: #6a0000cc;
+      color: #ff8a80;
+      box-shadow: 0 0 8px #ff5252bb;
+    }
+    .keys-list {
+      margin-top: 1.8rem;
+      max-height: 160px;
+      overflow-y: auto;
+      border-top: 1px solid #00f3ff44;
+      padding-top: 1rem;
+      font-size: 0.9rem;
+      color: #a0d5de;
+      font-family: 'Share Tech Mono', monospace;
+      user-select: text;
+    }
+    .keys-list h3 {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+      color: #00f3ffcc;
+      text-align: center;
+      user-select: text;
+    }
+    .key-item {
+      padding: 0.3rem 0.5rem;
+      border-radius: 7px;
+      background: #0a1c26aa;
+      margin-bottom: 0.35rem;
+      box-shadow: inset 0 0 3px #00f3ff77;
+      user-select: text;
+      transition: background-color 0.3s;
+    }
+    .key-item:hover {
+      background: #004d40bb;
+    }
+    footer {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #0099aaaa;
+      font-family: 'Share Tech Mono', monospace;
+      user-select: none;
+    }
+    a {
+      color: #00f3ffcc;
+      text-decoration: none;
+      user-select: text;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>🎯 Tony_Dev Scripts</h1>
+    <p class="description">Sistema seguro para gerar e validar keys de scripts, com bloqueio de 1 key por IP a cada 24h.</p>
+
+    <label for="user">Seu nome</label>
+    <input type="text" id="user" placeholder="Digite seu nome aqui..." autocomplete="off" spellcheck="false" />
+
+    <button id="generateBtn">Gerar Key</button>
+    <div id="generateResult" class="result"></div>
+
+    <label for="keyToValidate">Validar Key</label>
+    <input type="text" id="keyToValidate" placeholder="Digite a key para validar..." autocomplete="off" spellcheck="false" />
+    <button id="validateBtn">Validar Key</button>
+    <div id="validateResult" class="result"></div>
+
+    <div class="keys-list" id="keysList">
+      <h3>Keys Ativas</h3>
+      <div id="keysContainer"></div>
+    </div>
+
+    <footer>By <a href="#" target="_blank" rel="noopener noreferrer">Tony_Dev</a> — &copy; 2025</footer>
+  </main>
+
+<script>
+  const API_URL = 'http://localhost:3000';
+
+  const userInput = document.getElementById('user');
+  const generateBtn = document.getElementById('generateBtn');
+  const generateResult = document.getElementById('generateResult');
+
+  const keyToValidate = document.getElementById('keyToValidate');
+  const validateBtn = document.getElementById('validateBtn');
+  const validateResult = document.getElementById('validateResult');
+
+  const keysContainer = document.getElementById('keysContainer');
+
+  generateBtn.onclick = async () => {
+    const user = userInput.value.trim();
+    if (user.length < 3) {
+      generateResult.textContent = 'Por favor, digite um nome válido (mínimo 3 letras).';
+      generateResult.className = 'result error';
+      return;
+    }
+    generateResult.textContent = 'Gerando sua key...';
+    generateResult.className = 'result';
+
+    try {
+      const res = await fetch(`${API_URL}/generate-key`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        const expDate = new Date(data.expiresAt);
+        generateResult.innerHTML = `🎉 Sua key: <strong>${data.key}</strong><br>Válida até: ${expDate.toLocaleString()}`;
+        generateResult.className = 'result success';
+        loadKeys();
+      } else {
+        generateResult.textContent = data.error || 'Erro ao gerar a key.';
+        generateResult.className = 'result error';
+      }
+    } catch {
+      generateResult.textContent = 'Erro de conexão. Tente novamente.';
+      generateResult.className = 'result error';
+    }
+  };
+
+  validateBtn.onclick = async () => {
+    const key = keyToValidate.value.trim();
+    if (!key) {
+      validateResult.textContent = 'Digite uma key para validar.';
+      validateResult.className = 'result error';
+      return;
+    }
+    validateResult.textContent = 'Validando a key...';
+    validateResult.className = 'result';
+
+    try {
+      const res = await fetch(`${API_URL}/validate-key`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        if (data.valid) {
+          const expDate = new Date(data.expiresAt);
+          validateResult.innerHTML = `✅ Key válida para <strong>${data.user}</strong><br>Expira em: ${expDate.toLocaleString()}`;
+          validateResult.className = 'result success';
+        } else {
+          validateResult.textContent = 'Key inválida ou expirada.';
+          validateResult.className = 'result error';
+        }
+      } else {
+        validateResult.textContent = data.error || 'Erro na validação.';
+        validateResult.className = 'result error';
+      }
+    } catch {
+      validateResult.textContent = 'Erro de conexão. Tente novamente.';
+      validateResult.className = 'result error';
+    }
+  };
+
+  async function loadKeys() {
+    try {
+      const res = await fetch(`${API_URL}/keys`);
+      const keys = await res.json();
+      keysContainer.innerHTML = '';
+      for (const key in keys) {
+        const item = keys[key];
+        const expDate = new Date(item.expiresAt);
+        const div = document.createElement('div');
+        div.className = 'key-item';
+        div.textContent = `${key} — ${item.user} — Expira em: ${expDate.toLocaleString()}`;
+        keysContainer.appendChild(div);
+      }
+    } catch {
+      keysContainer.innerHTML = 'Não foi possível carregar as keys.';
+    }
+  }
+
+  loadKeys();
+</script>
+</body>
+</html>
